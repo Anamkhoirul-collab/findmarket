@@ -20,7 +20,7 @@ export async function POST(req) {
   }
   let body;
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Send a list of cities." }, { status: 400 }); }
-  const cities = [...new Set((body?.cities || []).map(clean).filter((c) => c.length >= 2))].slice(0, 10);
+  const cities = [...new Set((body?.cities || []).map(clean).filter((c) => c.length >= 2))].slice(0, 12);
   if (!cities.length) return NextResponse.json({ markets: [] });
 
   if (process.env.MOCK_MODE === "true" || !process.env.QLOO_API_KEY) {
