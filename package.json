@@ -1,0 +1,22 @@
+{
+  "name": "findmarket",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FindMarket: a Qloo-powered agent that finds where in the world an Indonesian small business's product will feel at home.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "engines": {
+    "node": ">=18.18"
+  },
+  "dependencies": {
+    "leaflet": "1.9.4",
+    "leaflet.heat": "0.2.0",
+    "next": "14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

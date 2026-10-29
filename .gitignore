@@ -1,0 +1,14 @@
+# Secrets: never commit these
+.env
+.env.local
+.env.*.local
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+
+# Misc
+.DS_Store
+*.log
+.vercel
