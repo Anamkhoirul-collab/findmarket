@@ -34,7 +34,7 @@ async function analyze({ description, language, home, onStep }) {
       else if (msg.type === "error") throw Object.assign(new Error(msg.error), { trace: msg.trace || [] });
     }
   }
-  if (!result) throw new Error("The analysis stopped before finishing. Please try again.");
+  if (!result) throw new Error("The analysis stopped before finishing, usually because the server ran out of time. Please try again; if it keeps happening, check the function logs on your host.");
   return result;
 }
 

@@ -31,17 +31,33 @@ export function countryName(code) {
   try { return new Intl.DisplayNames(["en"], { type: "region" }).of(code) || code; } catch { return code; }
 }
 
+// Languages that point to one country when no region is given (e.g. "id" -> Indonesia).
+const LANG_TO_COUNTRY = { id: "ID", ja: "JP", ko: "KR", th: "TH", vi: "VN", ms: "MY", tl: "PH", fil: "PH", zh: "CN", hi: "IN", bn: "BD", ur: "PK", tr: "TR", pl: "PL", nl: "NL", de: "DE", fr: "FR", it: "IT", es: "ES", pt: "BR", sv: "SE", da: "DK", fi: "FI", nb: "NO", el: "GR", he: "IL", ar: "SA", ru: "RU", uk: "UA", cs: "CZ", hu: "HU", ro: "RO" };
+
 export function detectHome() {
-  if (typeof navigator !== "undefined") {
-    for (const l of navigator.languages || [navigator.language]) {
-      const region = (l || "").split("-")[1];
-      if (region && COUNTRIES[region.toUpperCase()]) return region.toUpperCase();
-    }
-  }
+  // 1. Time zone is the best hint of where someone is (an Indonesian may well browse in English).
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (TZ_TO_COUNTRY[tz]) return TZ_TO_COUNTRY[tz];
   } catch { /* ignore */ }
+  if (typeof navigator !== "undefined") {
+    const langs = navigator.languages || [navigator.language];
+    // 2. A language with a region, other than plain English
+    for (const l of langs) {
+      const [base, region] = (l || "").split("-");
+      if (region && base !== "en" && COUNTRIES[region.toUpperCase()]) return region.toUpperCase();
+    }
+    // 3. A language that belongs to one country
+    for (const l of langs) {
+      const base = (l || "").split("-")[0].toLowerCase();
+      if (LANG_TO_COUNTRY[base]) return LANG_TO_COUNTRY[base];
+    }
+    // 4. Any region at all (en-GB, en-AU...)
+    for (const l of langs) {
+      const region = (l || "").split("-")[1];
+      if (region && COUNTRIES[region.toUpperCase()]) return region.toUpperCase();
+    }
+  }
   return "ID";
 }
 

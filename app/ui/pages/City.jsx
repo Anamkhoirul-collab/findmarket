@@ -10,21 +10,8 @@ import ExpandableMap from "../ExpandableMap";
 
 const CATS = ["food", "fashion", "craft", "beauty"];
 
-// Qloo demographics can come in different shapes; turn them into label/value rows.
-function demoRows(demo) {
-  if (!demo) return [];
-  const list = Array.isArray(demo) ? demo : [demo];
-  if (list.every((d) => d && typeof d.label === "string" && typeof d.value === "number")) return list;
-  const rows = [];
-  const walk = (obj, prefix) => {
-    for (const [k, v] of Object.entries(obj || {})) {
-      if (typeof v === "number") rows.push({ label: `${prefix}${k}`.replace(/_/g, " "), value: v });
-      else if (v && typeof v === "object" && !Array.isArray(v) && prefix.length < 30) walk(v, prefix ? `${prefix}${k} · ` : `${k} · `);
-    }
-  };
-  list.forEach((d) => walk(d, ""));
-  return rows.filter((r) => !/query|id|count/i.test(r.label)).slice(0, 8);
-}
+import { normalizeDemographics } from "../demographics";
+const demoRows = (d) => normalizeDemographics(d).age;
 
 function SelectBtn({ label, value, onChange, options }) {
   return (

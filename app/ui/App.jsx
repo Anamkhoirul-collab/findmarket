@@ -51,7 +51,8 @@ export default function App({ analyze, suggest = null, exploreCity, marketsOverv
 
   useEffect(() => {
     const loaded = loadSettings();
-    if (!loaded.home) { loaded.home = detectHome(); saveSettings(loaded); }
+    // Keep following the detected country until the user picks one themselves
+    if (!loaded.homeManual) { const d = detectHome(); if (loaded.home !== d) { loaded.home = d; saveSettings(loaded); } }
     if (!loaded.welcomed && !window.location.hash.startsWith("#shared-")) setWelcome(true);
     setHome(loaded.home);
     setSettings(loaded);
@@ -98,7 +99,7 @@ export default function App({ analyze, suggest = null, exploreCity, marketsOverv
   }, []);
 
   function update(patch) {
-    if (patch.home) setHome(patch.home);
+    if (patch.home) { setHome(patch.home); patch = { ...patch, homeManual: true }; }
     setSettings((s) => { const n = { ...s, ...patch }; saveSettings(n); return n; });
   }
   function setAndSave(list) { setBriefs(list); saveBriefs(list); }

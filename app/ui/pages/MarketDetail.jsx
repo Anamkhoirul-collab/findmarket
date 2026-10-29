@@ -9,6 +9,7 @@ import RealHeatMap from "../RealHeatMap";
 import ExpandableMap from "../ExpandableMap";
 import FitBarChart from "../FitBarChart";
 import AudienceCard from "../AudienceCard";
+import { sampleWhere } from "../sampleCities";
 import CountUp from "../CountUp";
 import TradeCard from "../TradeCard";
 import EvidenceCard, { ConfidenceBadge } from "../EvidenceCard";
@@ -30,6 +31,12 @@ export default function MarketDetail({ t, lang, brief, slug, go, exploreCity, on
     if (!m || !whereToSell) return;
     let alive = true;
     setWhere(null); setWhereState("loading");
+    // Sample briefs have no Qloo IDs, so a live call would return generic places: show sample data instead.
+    if (brief.mocked || brief.example) {
+      const sw = sampleWhere(m.name);
+      if (sw) { setWhere(sw); setWhereState("done"); } else setWhereState("error");
+      return;
+    }
     const tagIds = (brief.signals?.tags || []).map((x) => x.id).filter(Boolean);
     const entityIds = (brief.signals?.entities || []).map((x) => x.id).filter(Boolean);
     whereToSell({ city: m.name, tagIds, entityIds })

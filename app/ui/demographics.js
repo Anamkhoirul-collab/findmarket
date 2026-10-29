@@ -34,8 +34,17 @@ export function normalizeDemographics(demo) {
   if (list.length && list.every((d) => d && typeof d.label === "string" && typeof d.value === "number")) {
     return { age: list.map((d) => ({ label: d.label, value: d.value <= 1 ? d.value * 100 : d.value })), gender: [] };
   }
-  const ageObj = findObj(demo, "age");
-  const genderObj = findObj(demo, "gender");
+  // Qloo returns one entry per signal tag, each with query.age and query.gender: average them.
+  const entries = list.map((d) => d?.query || d).filter((d) => d && typeof d === "object");
+  const avg = (key) => {
+    const objs = entries.map((e) => (e[key] && typeof e[key] === "object" ? e[key] : null)).filter(Boolean);
+    if (!objs.length) return findObj(demo, key);
+    const out = {};
+    for (const o of objs) for (const [k, v] of Object.entries(o)) if (typeof v === "number") out[k] = (out[k] || 0) + v / objs.length;
+    return out;
+  };
+  const ageObj = avg("age");
+  const genderObj = avg("gender");
   const toRows = (obj, labels) => Object.entries(obj || {})
     .filter(([, v]) => typeof v === "number")
     .map(([k, v]) => ({ label: labels[k] || k.replace(/_/g, " "), value: v }));
