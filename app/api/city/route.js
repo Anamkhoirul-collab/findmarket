@@ -8,7 +8,7 @@ import { checkRateLimit } from "@/lib/ratelimit";
 const titleCase = (c) => c.replace(/(^|[\s-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 export async function POST(req) {
