@@ -4,7 +4,7 @@ import "./globals.css";
 export const metadata = {
   title: "FindMarket: find where your product belongs",
   description:
-    "A Qloo-powered agent that helps Indonesian small businesses find the cities abroad whose taste matches their product.",
+    "A Qloo-powered agent that helps small exporters anywhere find the cities abroad whose taste matches their product, backed by official trade data.",
 };
 
 export const viewport = {
